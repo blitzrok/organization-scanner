@@ -1,9 +1,7 @@
 package repository
 
-type Repository struct {
-	URL *string `json:"URL,omitempty"`
-}
+import "organization-scanner/internal/github"
 
 type Service interface {
-	ListRepositories() ([]*Repository, error)
+	ListRepositories(organization *string) ([]*github.Repository, error)
 }
