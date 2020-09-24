@@ -17,7 +17,6 @@ func NewGitHubService() Service {
 	return githubService{}
 }
 
-
 type Repository struct {
 	URL *string `json:"URL,omitempty"`
 }

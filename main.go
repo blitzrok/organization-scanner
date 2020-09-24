@@ -8,5 +8,6 @@ import (
 func main() {
 	git := github.NewGitHubService()
 	service := repository.NewRepositoryService(git)
-	service.ListRepositories()
+	org := "some-org"
+	service.ListRepositories(&org)
 }

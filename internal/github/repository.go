@@ -21,7 +21,7 @@ func (g githubService) GetRepositoriesByOrganization(ctx context.Context, organi
 
 	var res []*Repository
 	for _, s := range result {
-		res = append(res, &Repository{URL: s.URL})
+		res = append(res, &Repository{URL: s.SSHURL})
 	}
 	return res, nil
 }
