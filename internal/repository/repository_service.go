@@ -6,6 +6,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"organization-scanner/internal/github"
 	"organization-scanner/internal/scanner"
+	"time"
 )
 
 type repositoryService struct {
@@ -38,8 +39,16 @@ func (r repositoryService) ScanRepositoriesFromOrganization(organization *string
 	}
 	infoMessage := fmt.Sprintf("Found %v repositories for Organization %s. Proceeding to scan.", len(repositories), *organization)
 	logrus.Info(infoMessage)
+	outputFile := fmt.Sprintf("%s-leaks-report.csv", time.Now().String())
+	r.scannerService.ScanRepositories(repositories, &outputFile)
+	return nil
+}
 
-	outputFile := "report.csv"
+func (r repositoryService) ScanRepository(repoURL *string) error {
+	var repositories []*github.Repository
+	repositories = append(repositories, &github.Repository{URL: repoURL})
+	outputFile := fmt.Sprintf("%s-leaks-report.csv", time.Now().String())
+
 	r.scannerService.ScanRepositories(repositories, &outputFile)
 	return nil
 }

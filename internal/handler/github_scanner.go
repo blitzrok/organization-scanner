@@ -9,6 +9,7 @@ import (
 
 type GitHubRepositoryScanner interface {
 	ScanRepositoriesFromOrganization(org *string)
+	ScanRepository(repositoryURL *string)
 }
 
 type gitHubRepositoryScanner struct {}
@@ -21,6 +22,13 @@ func (g gitHubRepositoryScanner) ScanRepositoriesFromOrganization(org *string) {
 	err := gitHubService().ScanRepositoriesFromOrganization(org)
 	if err != nil {
 		logrus.Error("Error scanning repositories", err)
+	}
+}
+
+func (g gitHubRepositoryScanner) ScanRepository(repositoryURL *string) {
+	err := gitHubService().ScanRepository(repositoryURL)
+	if err != nil {
+		logrus.Error("Error scanning repository", err)
 	}
 }
 
