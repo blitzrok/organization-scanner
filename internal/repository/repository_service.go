@@ -36,7 +36,7 @@ func (r repositoryService) ScanRepositoriesFromOrganization(organization *string
 		hasNext = len(result) == resultsPerPage
 		repositories = append(repositories, result...)
 	}
-	infoMessage := fmt.Sprintf("Found %s repositories for Organization %s. Proceeding to scan.", len(repositories), organization)
+	infoMessage := fmt.Sprintf("Found %v repositories for Organization %s. Proceeding to scan.", len(repositories), *organization)
 	logrus.Info(infoMessage)
 
 	outputFile := "report.csv"
