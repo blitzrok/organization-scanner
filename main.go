@@ -1,13 +1,20 @@
 package main
 
 import (
-	"organization-scanner/internal/github"
-	"organization-scanner/internal/repository"
+	"flag"
+	"github.com/joho/godotenv"
+	"github.com/sirupsen/logrus"
+	"organization-scanner/internal/handler"
 )
 
+func init() {
+	if err := godotenv.Load(); err != nil {
+		logrus.Error("No .env file found")
+	}
+}
+
 func main() {
-	git := github.NewGitHubService()
-	service := repository.NewRepositoryService(git)
-	org := "some-org"
-	service.ListRepositories(&org)
+	org := flag.String("organization", "some-org", "Organization name")
+	flag.Parse()
+	handler.NewGitHubRepositoryScanner().ScanRepositoriesFromOrganization(org)
 }

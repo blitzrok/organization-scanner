@@ -9,15 +9,16 @@ import (
 )
 
 type repositoryService struct {
-	githubService github.Service
+	githubService  github.Service
+	scannerService scanner.ScannerService
 }
 
-func NewRepositoryService(githubService github.Service) Service {
-	return &repositoryService{githubService: githubService}
+func NewRepositoryService(githubService github.Service, scannerService scanner.ScannerService) Service {
+	return &repositoryService{githubService: githubService, scannerService: scannerService}
 }
 
-func (r repositoryService) ListRepositories(organization *string) ([]*github.Repository, error) {
-	logrus.Info("List repositories for organization ", organization)
+func (r repositoryService) ScanRepositoriesFromOrganization(organization *string) error {
+	logrus.Info("List repositories for organization ", *organization)
 	ctx := context.Background()
 	page := 1
 	resultsPerPage := 100
@@ -27,7 +28,8 @@ func (r repositoryService) ListRepositories(organization *string) ([]*github.Rep
 	for hasNext {
 		result, err := r.githubService.GetRepositoriesByOrganization(ctx, *organization, page, resultsPerPage)
 		if err != nil {
-			return nil, err
+			logrus.Error("Error retrieving repository list", err)
+			return err
 		}
 
 		page++
@@ -36,10 +38,8 @@ func (r repositoryService) ListRepositories(organization *string) ([]*github.Rep
 	}
 	infoMessage := fmt.Sprintf("Found %s repositories for Organization %s. Proceeding to scan.", len(repositories), organization)
 	logrus.Info(infoMessage)
-	for _, s := range repositories {
-		scanner.Scan(*s.URL)
-	}
 
-	return repositories, nil
+	outputFile := "report.csv"
+	r.scannerService.ScanRepositories(repositories, &outputFile)
+	return nil
 }
-

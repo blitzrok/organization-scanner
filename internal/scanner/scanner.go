@@ -4,9 +4,27 @@ import (
 	"fmt"
 	"github.com/sirupsen/logrus"
 	gitleaks "github.com/zricethezav/gitleaks/src"
+	"organization-scanner/internal/github"
 )
 
-func Scan(repoURL string) {
+type ScannerService interface {
+	ScanRepositories(repositories []*github.Repository, outputFile *string)
+}
+
+type scannerService struct {}
+
+func NewScanService() ScannerService{
+	return scannerService{}
+}
+
+
+func (s scannerService) ScanRepositories(repositories []*github.Repository, outputFile *string) {
+	for _, s := range repositories {
+		scan(*s.URL)
+	}
+}
+
+func scan(repoURL string) {
 	logrus.Info("Scanning repo ", repoURL)
 	opt := &gitleaks.Options{
 		Repo:           repoURL,

@@ -4,10 +4,11 @@ import (
 	"context"
 	"github.com/google/go-github/v32/github"
 	"golang.org/x/oauth2"
+	"os"
 )
 
 func (g githubService) Authenticate() *github.Client {
-	token := "<YOUR-TOKEN-HERE>"
+	token := os.Getenv("GITHUB_TOKEN")
 	ctx := context.Background()
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: token},
