@@ -34,3 +34,5 @@ performs the scanning using the library public methods.
 - Centralize authentication strategy
 - Flexible report output (support for `.json` as well)
 - Execute inside Docker
+
+
