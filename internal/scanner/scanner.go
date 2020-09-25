@@ -24,7 +24,9 @@ func (s scannerService) ScanRepositories(repositories []*github.Repository, outp
 		leaks = append(leaks, scan(*repo.URL)...)
 	}
 
-	exporter.LeaksToCSV(leaks, *outputFile)
+	if len(leaks) > 0 {
+		exporter.LeaksToCSV(leaks, *outputFile)
+	}
 }
 
 func scan(repoURL string) []gitleaks.Leak {
@@ -32,12 +34,10 @@ func scan(repoURL string) []gitleaks.Leak {
 	gitleaksConfigFile := "./scan-config.toml"
 	opt := &gitleaks.Options{
 		Repo:         repoURL,
-		ExcludeForks: true,
-		Entropy:      8.0,
+		Entropy: 8.0,
 		Log:          logrus.InfoLevel.String(),
 		Verbose:      true,
 		ConfigPath:   gitleaksConfigFile,
-		SampleConfig: true,
 	}
 
 	res, err := gitleaks.Run(opt)
