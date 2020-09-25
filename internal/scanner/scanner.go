@@ -20,11 +20,8 @@ func NewScanService() ScannerService {
 
 func (s scannerService) ScanRepositories(repositories []*github.Repository, outputFile *string) {
 	var leaks []gitleaks.Leak
-	for index, repo := range repositories {
+	for _, repo := range repositories {
 		leaks = append(leaks, scan(*repo.URL)...)
-		if index == 8 {
-			break
-		}
 	}
 
 	exporter.LeaksToCSV(leaks, *outputFile)
